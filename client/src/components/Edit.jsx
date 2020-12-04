@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -6,18 +6,7 @@ function Edit() {
 
     let { id } = useParams();
 
-    var [title,setTitle] = useState("");
-    var [content,setContent] = useState("");
-
-    useEffect(function() {
-        axios.get("/issues/list/"+id) 
-            .then(function(response) {
-                setTitle(response.data.title);
-                setContent(response.data.content);
-        });
-    });
-
-    var [issue,setIssue] = useState({Title:title, Content:content});
+    var [issue,setIssue] = useState({title:"", content:""});
 
     function change(event) {
 
@@ -34,12 +23,7 @@ function Edit() {
 
     function editIssue() {
 
-        const newissue = {
-            title: issue.Title,
-            content: issue.Content
-        }
-
-        axios.post("/issues/update/"+id, newissue)
+        axios.post("/issues/update/"+id,issue)
             .then(function(response) {
                 console.log("post updated");
             });
@@ -55,9 +39,9 @@ function Edit() {
     <div>
         <textarea
             name="title"
-            value={issue.title}
+            value={issue.Title}
             className="margin"
-            placeholder="Title of your Issue"
+            placeholder="New Title of your Issue"
             rows="1"
             cols="50"
             onChange={change}
@@ -67,9 +51,9 @@ function Edit() {
      <div>
         <textarea
             name="content"
-            value={issue.content}
+            value={issue.Content}
             className="margin"
-            placeholder="Content of your Issue"
+            placeholder="New Content of your Issue"
             rows="5"
             cols="50"
             onChange={change}
