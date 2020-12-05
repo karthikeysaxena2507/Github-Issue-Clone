@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 
 function Add() {
-    var [issue,setIssue] = useState({title:"", content:"", isopen:true});
+    var [issue,setIssue] = useState({title:"", content:"", status:"open"});
 
     function change(event) {
         var {name, value} = event.target;
 
-        setIssue((prevPost) => {
+        setIssue((prevIssue) => {
         return {
-          ...prevPost,
+          ...prevIssue,
           [name]: value
         };
       });
@@ -55,7 +55,6 @@ function Add() {
         />
      </div>
     <button className="btn btn-dark expand margin" onClick={addIssue}> Create </button> 
-    
 
 </div>
 };

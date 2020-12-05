@@ -26,11 +26,28 @@ function Issue() {
                 setIssue(response.data);
             });
     });
+
+    function changeStatus() {
+        axios.post("/issues/status/" + id, issue)
+            .then(function(response) {
+                console.log(response.data);
+            });
+    }
         
     return(<div className="container margin post"> 
     <div className="post-title"> <h2> {issue.title} </h2> </div>
     <div className="post-content"> {issue.content} </div>
-    <div className="post-info"> <img src={edit} onClick={update} className="one expand"/> <img src={trash} onClick={remove} className="one expand"/> </div>
+    <div className="post-info">
+            <div className="status1">
+                <button className="btn-xs btn-dark one" onClick={changeStatus} > Close Issue </button> 
+                <button className="btn-xs btn-dark" onClick={changeStatus} > Open Issue </button> 
+            </div>
+            <img src={edit} onClick={update} className="one expand"/>
+            <img src={trash} onClick={remove} className="one expand"/>
+            <div className="status2">
+                <p> {issue.status} </p>
+            </div>
+        </div>
     </div>);
 };
 

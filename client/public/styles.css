@@ -4,6 +4,21 @@ body {
     color: white;
     text-align: center;
   } 
+
+  .status1 {
+    float: left;
+    color: #000000;
+  }
+
+  .status1 span {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .status2 {
+    float: right;
+    color: #000000;
+  }
   
   .heading {
     text-align: center;
@@ -75,8 +90,9 @@ body {
 
   .post-info {
     background-color: rgb(132, 199, 190);
-    padding: 3px 25px;
+    padding: 7px 25px;
     border-radius: 10px;
+    text-align: center;
   }
 
   .post {
