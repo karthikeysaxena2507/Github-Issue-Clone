@@ -1,17 +1,20 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Pagination } from "@material-ui/lab";
+import usePagination from "./Pagination";
 import { Link } from "react-router-dom";
 import edit from "../images/edit.png";
 import trash from "../images/trash.png";
 
-
 function Home() {
 
-    var [issues,setIssues] = useState([]);
+    let [page, setPage] = useState(1);
+    const PER_PAGE = 10;
 
     var [open,setOpen] = useState(false);
     var [close,setClose] = useState(false);
+    var [issues,setIssues] = useState([]);
 
     useEffect(function() {
         axios.get("/issues") 
@@ -31,6 +34,14 @@ function Home() {
                 }
             });
     });
+
+    const count = Math.ceil(issues.length / PER_PAGE);
+    const _DATA = usePagination(issues, PER_PAGE);
+
+    const handleChange = (e, p) => {
+        setPage(p);
+        _DATA.jump(p);
+      };
 
     function changeopen() {
         setOpen(!open);
@@ -84,7 +95,7 @@ function Home() {
     </div>
     <div >
     <Link to="/add">
-        <button className="btn btn-dark expand margin" > Create </button> 
+        <button className="btn btn-dark expand margin"> Create </button> 
     </Link>
     <div className="margin">
         <input type="checkbox" onClick={changeopen}/> <span className="one"> Show Open Issues </span>
@@ -92,9 +103,27 @@ function Home() {
     </div>
     </div>
     <div className="container">
-        {issues.map(createIssue)}
+        <Pagination
+            count={count}
+            size="large"
+            page={page}
+            variant="outlined"
+            shape="rounded"
+            onChange={handleChange}
+        />
+
+        {_DATA.currentData().map(createIssue)}        
+
+        <Pagination
+            count={count}
+            size="large"
+            page={page}
+            variant="outlined"
+            shape="rounded"
+            onChange={handleChange}
+        />
     </div>
-    </div>)
+</div>)
 };
 
 export default Home;
