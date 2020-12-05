@@ -39,8 +39,8 @@ function Issue() {
     <div className="post-content"> {issue.content} </div>
     <div className="post-info">
             <div className="status1">
-                <button className="btn-xs btn-dark one" onClick={changeStatus} > Close Issue </button> 
-                <button className="btn-xs btn-dark" onClick={changeStatus} > Open Issue </button> 
+                <span className="one expand" onClick={changeStatus} > Close </span> 
+                <span onClick={changeStatus} className="expand"> Open </span> 
             </div>
             <img src={edit} onClick={update} className="one expand"/>
             <img src={trash} onClick={remove} className="one expand"/>

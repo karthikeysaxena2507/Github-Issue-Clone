@@ -65,8 +65,8 @@ function Home() {
         <div className="post-content"> {props.content.substring(0,100)} ...<a href={link}> Read More </a> </div>
         <div className="post-info">
             <div className="status1">
-                <span className="one" onClick={changeStatus} > Close </span> 
-                <span onClick={changeStatus} > Open </span> 
+                <span className="one expand" onClick={changeStatus} > Close </span> 
+                <span onClick={changeStatus} className="expand"> Open </span> 
             </div>
             <img src={edit} onClick={update} className="one expand"/>
             <img src={trash} onClick={remove} className="one expand"/>
