@@ -27,12 +27,35 @@ function Issue() {
             });
     });
 
-    function changeStatus() {
-        axios.post("/issues/status/" + id, issue)
-            .then(function(response) {
-                console.log(response.data);
-            });
+    function changeStatus1() {
+        if(issue.status === "open") {
+            axios.post("/issues/status/" + issue._id, issue)
+                .then(function(response) {
+                    console.log(response.data);
+                });
+        }
     }
+
+    function changeStatus2() {
+        if(issue.status === "closed") {
+            axios.post("/issues/status/" + issue._id, issue)
+                .then(function(response) {
+                    console.log(response.data);
+                });
+        }
+    }
+
+    if(issue.status==="open") {
+        var styling2 = {
+            color: "blue"
+        }
+    };
+
+    if(issue.status==="closed") {
+        var styling1 = {
+            color: "blue"
+        }
+    };
 
     return(<div className="container margin post"> 
     <div className="issue-title">
@@ -42,8 +65,8 @@ function Issue() {
         <div className="issue-content"> {issue.content.substring(0,225)} </div>
         <div className="issue-info">
             <div className="status1">
-                <span className="one expand" onClick={changeStatus}> Close </span> 
-                <span onClick={changeStatus} className="expand"> Open </span> 
+                <span className="one expand" style={styling1} onClick={changeStatus1}> Close </span> 
+                <span onClick={changeStatus2} style={styling2} className="expand"> Open </span> 
             </div>
             <div className="status2">
             <img src={edit} onClick={update} className="one expand"/>
