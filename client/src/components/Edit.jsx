@@ -25,9 +25,8 @@ function Edit() {
 
         axios.post("/issues/update/"+id,issue)
             .then(function(response) {
-                console.log("post updated");
+                console.log(response.data);
             });
-
         window.location = "/";
     }
 
@@ -39,7 +38,7 @@ function Edit() {
     <div>
         <textarea
             name="title"
-            value={issue.Title}
+            value={issue.title}
             className="margin"
             placeholder="New Title of your Issue"
             rows="1"
@@ -51,7 +50,7 @@ function Edit() {
      <div>
         <textarea
             name="content"
-            value={issue.Content}
+            value={issue.content}
             className="margin"
             placeholder="New Content of your Issue"
             rows="5"

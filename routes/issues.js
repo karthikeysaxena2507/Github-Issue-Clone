@@ -61,7 +61,7 @@ router.route("/update/:id").post(function(req, res) {
     Issue.findOne({_id:req.params.id}, function(err, issue) {
         issue.title = req.body.title;
         issue.content = req.body.content;
-        issue.content = req.body.status;
+        issue.status = req.body.status;
         issue.save(function(err) {
             if(err) {
                 res.status(400).json("Error: " + err);
