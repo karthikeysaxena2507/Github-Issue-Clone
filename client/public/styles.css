@@ -85,7 +85,10 @@ body {
 
   .issue-title{
     background-color: #000000;
-    padding: 5px 15px;
+    padding-bottom: 25px;
+    padding-left: 15px;
+    padding-right: 15px;
+
     text-align: left;
     color: #fff;
   }
@@ -111,7 +114,7 @@ body {
   .post {
     margin-top: 25px;
     margin-bottom: 25px;
-    border-radius: 10px;
+    border-radius: 15px;
     border: 2px solid black;
     background-color: beige;
   }

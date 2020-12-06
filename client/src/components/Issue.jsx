@@ -33,13 +33,16 @@ function Issue() {
                 console.log(response.data);
             });
     }
-        
+
     return(<div className="container margin post"> 
-    <div className="issue-title"> <span className="title"> {issue.title} </span> <span className="status2"> status: {issue.status} </span></div>
-        <div className="issue-content"> {issue.content}</div>
+    <div className="issue-title">
+            <div className="title"> {issue.title}</div>
+            <div className="status2"> status: {issue.status} </div>
+        </div>
+        <div className="issue-content"> {issue.content.substring(0,225)} </div>
         <div className="issue-info">
             <div className="status1">
-                <span className="one expand" onClick={changeStatus} > Close </span> 
+                <span className="one expand" onClick={changeStatus}> Close </span> 
                 <span onClick={changeStatus} className="expand"> Open </span> 
             </div>
             <div className="status2">

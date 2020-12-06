@@ -62,22 +62,48 @@ function Home() {
             axios.delete("/issues/delete/" + props._id);
         }
 
-        function changeStatus() {
-            axios.post("/issues/status/" + props._id, props)
-                .then(function(response) {
-                    console.log(response.data);
-                });
+        function changeStatus1() {
+            if(props.status === "open") {
+                axios.post("/issues/status/" + props._id, props)
+                    .then(function(response) {
+                        console.log(response.data);
+                    });
+            }
         }
+
+        function changeStatus2() {
+            if(props.status === "closed") {
+                axios.post("/issues/status/" + props._id, props)
+                    .then(function(response) {
+                        console.log(response.data);
+                    });
+            }
+        }
+
+        if(props.status==="open") {
+            var styling2 = {
+                color: "blue"
+            }
+        };
+
+        if(props.status==="closed") {
+            var styling1 = {
+                color: "blue"
+            }
+        };
 
         const link = "/list/"+props._id;
         
         return(<div key={index} className="container margin post"> 
-        <div className="issue-title"> <span className="title"> {props.title.substring(0,100)} ... <a href={link}> Read More </a> </span> <span className="status2"> status: {props.status} </span></div>
+        <div className="issue-title">
+            <div className="title"> {props.title}</div>
+            <div className="status2"> status: {props.status} </div>
+        </div>
         <div className="issue-content"> {props.content.substring(0,225)} ...<a href={link}> Read More </a> </div>
         <div className="issue-info">
             <div className="status1">
-                <span className="one expand" onClick={changeStatus}> Close </span> 
-                <span onClick={changeStatus} className="expand"> Open </span> 
+                <span className="one expand" style={styling1} onClick={changeStatus1}> Close </span> 
+                <span onClick={changeStatus2} style={styling2} className="expand"> Open </span> 
             </div>
             <div className="status2">
             <img src={edit} onClick={update} className="one expand"/>
