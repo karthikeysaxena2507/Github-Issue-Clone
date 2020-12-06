@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -7,6 +7,13 @@ function Edit() {
     let { id } = useParams();
 
     var [issue,setIssue] = useState({title:"", content:""});
+
+    useEffect(function() {
+        axios.get("/issues/list/"+id)
+            .then(function(response) {
+                setIssue(response.data);
+            });
+    },[id]);
 
     function change(event) {
 

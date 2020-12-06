@@ -35,17 +35,16 @@ function Issue() {
     }
         
     return(<div className="container margin post"> 
-    <div className="post-title"> <h2> {issue.title} </h2> </div>
-    <div className="post-content"> {issue.content} </div>
-    <div className="post-info">
+    <div className="issue-title"> <span className="title"> {issue.title} </span> <span className="status2"> status: {issue.status} </span></div>
+        <div className="issue-content"> {issue.content}</div>
+        <div className="issue-info">
             <div className="status1">
                 <span className="one expand" onClick={changeStatus} > Close </span> 
                 <span onClick={changeStatus} className="expand"> Open </span> 
             </div>
+            <div className="status2">
             <img src={edit} onClick={update} className="one expand"/>
             <img src={trash} onClick={remove} className="one expand"/>
-            <div className="status2">
-                <p> {issue.status} </p>
             </div>
         </div>
     </div>);

@@ -72,17 +72,16 @@ function Home() {
         const link = "/list/"+props._id;
         
         return(<div key={index} className="container margin post"> 
-        <div className="post-title"> <h2> {props.title} </h2> </div>
-        <div className="post-content"> {props.content.substring(0,100)} ...<a href={link}> Read More </a> </div>
-        <div className="post-info">
+        <div className="issue-title"> <span className="title"> {props.title.substring(0,100)} ... <a href={link}> Read More </a> </span> <span className="status2"> status: {props.status} </span></div>
+        <div className="issue-content"> {props.content.substring(0,225)} ...<a href={link}> Read More </a> </div>
+        <div className="issue-info">
             <div className="status1">
-                <span className="one expand" onClick={changeStatus} > Close </span> 
+                <span className="one expand" onClick={changeStatus}> Close </span> 
                 <span onClick={changeStatus} className="expand"> Open </span> 
             </div>
+            <div className="status2">
             <img src={edit} onClick={update} className="one expand"/>
             <img src={trash} onClick={remove} className="one expand"/>
-            <div className="status2">
-                <p> {props.status} </p>
             </div>
         </div>
         </div>);
@@ -95,11 +94,11 @@ function Home() {
     </div>
     <div >
     <Link to="/add">
-        <button className="btn btn-dark expand margin"> Create </button> 
+        <button className="btn btn-dark expand margin"> new issue </button> 
     </Link>
     <div className="margin">
-        <input type="checkbox" onClick={changeopen}/> <span className="one"> Show Open Issues </span>
-        <input type="checkbox" onClick={changeclose}/> <span className="one"> Show Closed Issues </span>
+        <input type="checkbox" onClick={changeopen}/> <span className="one"> Open Issues </span>
+        <input type="checkbox" onClick={changeclose}/> <span className="one"> Closed Issues </span>
     </div>
     </div>
     <div className="container">
@@ -122,6 +121,8 @@ function Home() {
             shape="rounded"
             onChange={handleChange}
         />
+        <br />
+        <br />
     </div>
 </div>)
 };
