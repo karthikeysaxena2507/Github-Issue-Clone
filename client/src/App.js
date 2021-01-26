@@ -8,10 +8,10 @@ import Add from "./components/Add";
 function App() {
   return (
     <Router>
-    <Route path="/" exact component={Home} />
-    <Route path="/add" component={Add} />
-    <Route path="/list/:id" component={Issue} />
-    <Route path="/update/:id" component={Edit} />
+      <Route path="/" exact component={Home} />
+      <Route path="/add" exact component={Add} />
+      <Route path="/list/:id" exact component={Issue} />
+      <Route path="/update/:id" exact component={Edit} />
     </Router>
   );
 }

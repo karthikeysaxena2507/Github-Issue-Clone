@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function Add() {
+const Add = () => {
     var [issue,setIssue] = useState({title:"", content:"", status:"open"});
 
-    function change(event) {
-        var {name, value} = event.target;
-
+    const change = (e) => {
+        var {name, value} = e.target;
         setIssue((prevIssue) => {
         return {
           ...prevIssue,
@@ -15,16 +14,15 @@ function Add() {
       });
     }
 
-    function addIssue(event) {
-        event.preventDefault();
+    const addIssue = (e) => {
+        e.preventDefault();
         axios.post("/issues/add", issue)
-          .then(function(res) { 
+          .then((res) => { 
             console.log(res.data);
         });
         setIssue({
           title:"", 
           content:"",
-          likes:0
         });
         window.location = "/";
     }

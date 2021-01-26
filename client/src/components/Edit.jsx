@@ -2,23 +2,21 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-function Edit() {
+const Edit = () => {
 
     let { id } = useParams();
 
     var [issue,setIssue] = useState({title:"", content:""});
 
-    useEffect(function() {
+    useEffect(() => {
         axios.get("/issues/list/"+id)
             .then(function(response) {
                 setIssue(response.data);
             });
     },[id]);
 
-    function change(event) {
-
-        var {name, value} = event.target;
-
+    const change = (e) => {
+        var {name, value} = e.target;
         setIssue((prevIssue) => {
         return {
           ...prevIssue,
@@ -28,8 +26,7 @@ function Edit() {
 
     }
 
-    function editIssue() {
-
+    const editIssue = () => {
         axios.post("/issues/update/"+id,issue)
             .then(function(response) {
                 console.log(response.data);

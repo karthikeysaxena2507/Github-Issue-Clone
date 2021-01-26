@@ -7,33 +7,38 @@ import { Link } from "react-router-dom";
 import edit from "../images/edit.png";
 import trash from "../images/trash.png";
 
-function Home() {
+const Home = () => {
 
     let [page, setPage] = useState(1);
     const PER_PAGE = 10;
-
-    var [open,setOpen] = useState(false);
-    var [close,setClose] = useState(false);
     var [issues,setIssues] = useState([]);
+    var [open, setOpen] = useState(false);
+    var [close, setClose] = useState(false);
 
-    useEffect(function() {
-        axios.get("/issues") 
-            .then(function(response) {
+    useEffect(() => {
+        const fetch = async() => {
+            try {
+                const response = await axios.get("/issues");
                 if(open && !close) {
-                    setIssues(response.data.reverse().filter(function(issue) {
-                        return (issue.status === "open")
+                    setIssues(response.data.reverse().filter((issue) => {
+                        return (issue.status === "open");
                     }));
                 }
                 else if(!open && close) {
-                    setIssues(response.data.reverse().filter(function(issue) {
-                        return (issue.status === "closed")
+                    setIssues(response.data.reverse().filter((issue) => {
+                        return (issue.status === "closed");
                     }));
                 }
                 else {
                     setIssues(response.data.reverse());
                 }
-            });
-    });
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+        fetch();
+    },[close, open]);
 
     const count = Math.ceil(issues.length / PER_PAGE);
     const _DATA = usePagination(issues, PER_PAGE);
@@ -41,58 +46,50 @@ function Home() {
     const handleChange = (e, p) => {
         setPage(p);
         _DATA.jump(p);
-      };
+    };
 
-    function changeopen() {
-        setOpen(!open);
-    }
+    const createIssue = (props, index) => {    
 
-    function changeclose() {
-        setClose(!close);
-    }
-
-
-    function createIssue(props, index) {
-
-        function update() {
-            window.location = "/update/" + props._id;
-        }       
-
-        function remove() {
-            axios.delete("/issues/delete/" + props._id);
-        }
-
-        function changeStatus1() {
-            if(props.status === "open") {
-                axios.post("/issues/status/" + props._id, props)
-                    .then(function(response) {
-                        console.log(response.data);
-                    });
+        const remove = async() => {
+            const response = await axios.delete(`/issues/delete/${props._id}`);
+            if(open && !close) {
+                setIssues(response.data.reverse().filter((issue) => {
+                    return (issue.status === "open");
+                }));
+            }
+            else if(!open && close) {
+                setIssues(response.data.reverse().filter((issue) => {
+                    return (issue.status === "closed");
+                }));
+            }
+            else {
+                setIssues(response.data.reverse());
             }
         }
 
-        function changeStatus2() {
-            if(props.status === "closed") {
-                axios.post("/issues/status/" + props._id, props)
-                    .then(function(response) {
-                        console.log(response.data);
-                    });
+        const changeStatus = async(e) => {
+            if(e.target.innerText === "Open" && props.status === "closed") {
+                var response = await axios.post(`/issues/status/${props._id}`, props);
+            }
+            else if(e.target.innerText === "Close" && props.status === "open") {
+                response = await axios.post(`/issues/status/${props._id}`, props);
+            }
+            if(open && !close) {
+                setIssues(response.data.reverse().filter((issue) => {
+                    return (issue.status === "open");
+                }));
+            }
+            else if(!open && close) {
+                setIssues(response.data.reverse().filter((issue) => {
+                    return (issue.status === "closed");
+                }));
+            }
+            else {
+                setIssues(response.data.reverse());
             }
         }
 
-        if(props.status==="open") {
-            var styling2 = {
-                color: "blue"
-            }
-        };
-
-        if(props.status==="closed") {
-            var styling1 = {
-                color: "blue"
-            }
-        };
-
-        const link = "/list/"+props._id;
+        const link = `/list/${props._id}`;
         
         return(<div key={index} className="container margin post"> 
         <div className="issue-title">
@@ -102,17 +99,22 @@ function Home() {
         <div className="issue-content"> {props.content.substring(0,225)} ...<a href={link}> Read More </a> </div>
         <div className="issue-info">
             <div className="status1">
-                <span className="one expand" style={styling1} onClick={changeStatus1}> Close </span> 
-                <span onClick={changeStatus2} style={styling2} className="expand"> Open </span> 
+                <span className="one expand" style={(props.status === "closed") ? {color: "blue"} : null} onClick={changeStatus}> Close </span> 
+                <span onClick={changeStatus} style={(props.status === "open") ? {color: "blue"} : null} className="expand"> Open </span> 
             </div>
             <div className="status2">
-            <img src={edit} onClick={update} className="one expand"/>
+            <img src={edit} onClick={() => {window.location = `/update/${props._id}`}} className="one expand"/>
             <img src={trash} onClick={remove} className="one expand"/>
             </div>
         </div>
         </div>);
     }
         
+    const filterIssues = (e) => {
+        console.log(open, close);
+        if(e.target.name === "open") setOpen(!open);
+        else setClose(!close);
+    }
 
     return(<div>
     <div>
@@ -120,11 +122,11 @@ function Home() {
     </div>
     <div >
     <Link to="/add">
-        <button className="btn btn-dark expand margin"> new issue </button> 
+        <button className="btn btn-dark expand margin"> New Issue </button> 
     </Link>
     <div className="margin">
-        <input type="checkbox" onClick={changeopen}/> <span className="one"> Open Issues </span>
-        <input type="checkbox" onClick={changeclose}/> <span className="one"> Closed Issues </span>
+        <input type="checkbox" onClick={filterIssues} name="open"/> <span className="one"> Open Issues </span>
+        <input type="checkbox" onClick={filterIssues} name="close"/> <span className="one"> Closed Issues </span>
     </div>
     </div>
     <div className="container">

@@ -1,95 +1,109 @@
 const router = require("express").Router();
 let Issue = require("../models/issue.model");
 
-// listing all issues
-router.route("/").get(function(req, res) {
-    Issue.find({}, function(err, issues) {
-        if(err) {
-            res.status(400).json("Error: " + err);
-        }
-        else {
-            res.json(issues);
-        }
-    });
+// LISTING ALL ISSUES
+router.get("/", async(req, res, next) => {
+    try {
+        const issues = await Issue.find({});
+        res.json(issues);
+    }
+    catch(error) {
+        res.json(next(error));
+    }
 });
 
-// adding issues
-router.route("/add").post(function(req, res) {
-    const issue = new Issue({
-        title: req.body.title,
-        content: req.body.content,
-        status: req.body.status
-    });
-    console.log(issue);
-
-    issue.save(function(err) {
-        if(err) {
-            res.status(400).json("Error: " + err);
-        }
-        else {
-            res.json("issue added");
-        }
-    });
+// ADDING AN ISSUE
+router.post("/add", async(req, res, next) => {
+    try {
+        const issue = await new Issue({
+            title: req.body.title,
+            content: req.body.content,
+            status: req.body.status
+        });
+        issue.save()
+        .then((response) => {
+            res.json(response);
+        })
+        .catch((error) => {
+            res.json(error);
+        })
+    }
+    catch(error) {
+        res.json(error);
+    }
 });
 
-// deleting a issue
-router.route("/delete/:id").delete(function(req, res) {
-    Issue.deleteOne({_id: req.params.id}, function(err) {
-        if(err) {
-            res.status(400).json("Error: " + err);
-        }
-        else {
-            res.json("issue deleted");
-        }
-    });
+// DELETING AN ISSUE
+router.delete("/delete/:id", async(req, res, next) => {
+    try {
+        const issue = await Issue.deleteOne({_id: req.params.id});
+        const issues = await Issue.find({});
+        res.json(issues);
+    }
+    catch(error) {
+        res.json(next(error));
+    }
 });
 
-// listing a particular issue
-router.route("/list/:id").get(function(req, res) {
-    Issue.findOne({_id: req.params.id}, function(err, issue) {
-        if(err) {
-            res.status(400).json("Error: " + err);
-        }
-        else {
-            res.json(issue);
-        }
-    });
+// GETTING A PARTICULAR ISSUE
+router.get("/list/:id", async(req, res, next) => {
+    try {
+        const issue = await Issue.findOne({_id: req.params.id});
+        res.json(issue);
+    }
+    catch(error) {
+        res.json(error);
+    }
 });
 
-// updating an issue
-router.route("/update/:id").post(function(req, res) { 
-    Issue.findOne({_id:req.params.id}, function(err, issue) {
+// UPDATING AN ISSUE
+router.post("/update/:id", async(req, res, next) => {
+    try {
+        const issue = await Issue.findOne({_id:req.params.id});
         issue.title = req.body.title;
         issue.content = req.body.content;
         issue.status = req.body.status;
-        issue.save(function(err) {
-            if(err) {
-                res.status(400).json("Error: " + err);
-            }
-            else {
-                res.json("issue updated");
-            }    
+        issue.save()
+        .then((response) => {
+            res.json(response);
+        })
+        .catch((error) => {
+            res.json(error);
         });
-    });
+    } 
+    catch(error) {
+        res.json(next(error));
+    }
 });
 
-router.route("/status/:id").post(function(req, res) {
-    Issue.findOne({_id:req.params.id}, function(err, issue) {
+// CHANGING STATUS OF ISSUE
+router.post("/status/:id", async(req, res, next) => {
+    try {
+        const issue = await Issue.findOne({_id:req.params.id});
         if(req.body.status === "closed") {
             issue.status = "open";
         }
         else if(req.body.status === "open") {
             issue.status = "closed";
         }
-        issue.save(function(err) {
-            if(err) {
-                res.status(400).json("Error: " + err);
+        issue.save()
+        .then(async() => {
+            if(req.body.single) {
+                res.json(issue);
             }
             else {
-                res.json(issue);
-            }    
-        });
-    });
+                const issues = await Issue.find({});
+                res.json(issues);
+            }
+        })
+        .catch((err) => {
+            res.json(err);
+        })
+        
+    }
+    catch(error) {
+        res.json(next(error));
+    }
 });
 
 module.exports = router;

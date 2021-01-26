@@ -5,74 +5,66 @@ import axios from "axios";
 import edit from "../images/edit.png";
 import trash from "../images/trash.png";
 
-function Issue() {
+const Issue = () => {
 
     let { id } = useParams();
 
-    var [issue,setIssue] = useState({title:"", content:"", isopen:true});
-
-    function update() {
-        window.location = "/update/"+id;
-    }       
-
-    function remove() {
-        axios.delete("/issues/delete/"+id);
-        window.location = "/";
-    }
+    var [issue,setIssue] = useState({});
 
     useEffect(function() {
         axios.get("/issues/list/"+id) 
             .then(function(response) {
-                setIssue(response.data);
+                setIssue({
+                    title: response.data.title,
+                    content: response.data.content,
+                    status: response.data.status,
+                    single: true
+                });
             });
-    });
+    },[id]);
 
-    function changeStatus1() {
-        if(issue.status === "open") {
-            axios.post("/issues/status/" + issue._id, issue)
-                .then(function(response) {
-                    console.log(response.data);
-                });
+    const remove = async() => {
+        await axios.delete(`/issues/delete/${id}`);
+        window.location = "/";
+    }
+    
+    const changeStatus = async(e) => {
+        if(e.target.innerText === "Open" && issue.status === "closed") {
+            const response = await axios.post(`/issues/status/${id}`, issue);
+            setIssue({
+                title: response.data.title,
+                content: response.data.content,
+                status: response.data.status,
+                single: true
+            });
+        }
+        else if(e.target.innerText === "Close" && issue.status === "open") {
+            const response = await axios.post(`/issues/status/${id}`, issue);
+            setIssue({
+                title: response.data.title,
+                content: response.data.content,
+                status: response.data.status,
+                single: true
+            });
         }
     }
-
-    function changeStatus2() {
-        if(issue.status === "closed") {
-            axios.post("/issues/status/" + issue._id, issue)
-                .then(function(response) {
-                    console.log(response.data);
-                });
-        }
-    }
-
-    if(issue.status==="open") {
-        var styling2 = {
-            color: "blue"
-        }
-    };
-
-    if(issue.status==="closed") {
-        var styling1 = {
-            color: "blue"
-        }
-    };
-
+    
     return(<div className="container margin post"> 
     <div className="issue-title">
-            <div className="title"> {issue.title}</div>
-            <div className="status2"> status: {issue.status} </div>
+        <div className="title"> {issue.title}</div>
+        <div className="status2"> status: {issue.status} </div>
+    </div>
+    <div className="issue-content"> {issue.content} </div>
+    <div className="issue-info">
+        <div className="status1">
+            <span className="one expand" style={(issue.status === "closed") ? {color: "blue"} : null} onClick={changeStatus}> Close </span> 
+            <span onClick={changeStatus} style={(issue.status === "open") ? {color: "blue"} : null} className="expand"> Open </span> 
         </div>
-        <div className="issue-content"> {issue.content.substring(0,225)} </div>
-        <div className="issue-info">
-            <div className="status1">
-                <span className="one expand" style={styling1} onClick={changeStatus1}> Close </span> 
-                <span onClick={changeStatus2} style={styling2} className="expand"> Open </span> 
-            </div>
-            <div className="status2">
-            <img src={edit} onClick={update} className="one expand"/>
-            <img src={trash} onClick={remove} className="one expand"/>
-            </div>
+        <div className="status2">
+        <img src={edit} onClick={() => {window.location = `/update/${issue._id}`}} className="one expand"/>
+        <img src={trash} onClick={remove} className="one expand"/>
         </div>
+    </div>
     </div>);
 };
 
